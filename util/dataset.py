@@ -69,7 +69,7 @@ def make_dataset(split=0, data_root=None, data_list=None, sub_list=None, filter_
             for c in label_class:      
                 if c in sub_list:
                     tmp_label = np.zeros_like(label)
-                    target_pix = np.where(label == c)  # 坐标
+                    target_pix = np.where(label == c) 
                     tmp_label[target_pix[0],target_pix[1]] = 1 
                     if tmp_label.sum() >= 2 * 32 * 32:      
                         new_label_class.append(c)            
