@@ -30,10 +30,7 @@ from util.util import AverageMeter, poly_learning_rate, intersectionAndUnionGPU,
 
 cv2.ocl.setUseOpenCL(False)
 cv2.setNumThreads(0)
-# os.environ["CUDA_VISIBLE_DEVICES"] = '8'
-  # seed->[0,999]
-# seed_array = np.array([382]) # 871 756 712  ||  209 835 742 948; 638 47 345 526; 737 79 113 855
-
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 def get_parser():
 
@@ -214,10 +211,10 @@ def validate(val_loader, model, val_seed):
     val_start = end
     
     assert test_num % args.batch_size_val == 0
-    db_epoch = math.ceil(test_num/(len(val_loader)-args.batch_size_val))  # -bs防止bs>1时drop_last
+    db_epoch = math.ceil(test_num/(len(val_loader)-args.batch_size_val))
     iter_num = 0
 
-    for e in range(db_epoch): # 保证episodes>test_num
+    for e in range(db_epoch):
         for i, (input, target, s_input, s_mask, cat_idx_list, ori_label) in enumerate(val_loader):
             if iter_num * args.batch_size_val >= test_num:
                 break
@@ -240,13 +237,13 @@ def validate(val_loader, model, val_seed):
                         output_temp = model(s_x=s_input_temp, s_y=s_mask_temp, x=input_temp, y=target_temp, cat_idx=cat_idx_list)
                     model_time.update(time.time() - start_time)
 
-                    if args.ori_resize:  # 真值转化为方形
+                    if args.ori_resize:
                         longerside = max(ori_label.size(1), ori_label.size(2))
                         backmask = torch.ones(ori_label.size(0), longerside, longerside, device='cuda')*255
                         backmask[0, :ori_label.size(1), :ori_label.size(2)] = ori_label
                         target_temp = backmask.clone().long()
 
-                    output_temp = F.interpolate(output_temp, size=target_temp.size()[1:], mode='bilinear', align_corners=True)        # 上采样至mask长边 仍为正方形 
+                    output_temp = F.interpolate(output_temp, size=target_temp.size()[1:], mode='bilinear', align_corners=True) 
                     loss_temp = criterion(output_temp, target_temp)    
                     if scale_id == 0: 
                         output = output_temp/scale_len
@@ -272,13 +269,13 @@ def validate(val_loader, model, val_seed):
                 output = model(s_x=s_input, s_y=s_mask, x=input, y=target, cat_idx=cat_idx_list)
                 model_time.update(time.time() - start_time)
 
-                if args.ori_resize:  # 真值转化为方形
+                if args.ori_resize:
                     longerside = max(ori_label.size(1), ori_label.size(2))
                     backmask = torch.ones(ori_label.size(0), longerside, longerside, device='cuda')*255
                     backmask[0, :ori_label.size(1), :ori_label.size(2)] = ori_label
                     target = backmask.clone().long()
 
-                output = F.interpolate(output, size=target.size()[1:], mode='bilinear', align_corners=True)        # 上采样至mask长边 仍为正方形 
+                output = F.interpolate(output, size=target.size()[1:], mode='bilinear', align_corners=True) 
                 output = output.float()
                 loss = criterion(output, target)    
 
