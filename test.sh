@@ -1,8 +1,8 @@
 #!/bin/sh
 PARTITION=Segmentation
 
-GPU_ID=6
-dataset=pascal # pascal coco fss#
+GPU_ID=0
+dataset=pascal # pascal coco
 exp_name=split3
 
 arch=DCP
