@@ -28,16 +28,16 @@ from model import DCP
 from util import dataset
 from util import transform, config
 from util.util import AverageMeter, poly_learning_rate, intersectionAndUnionGPU, get_model_para_number, setup_seed, get_logger, get_save_path, \
-                                    is_same_model, fix_bn, sum_list, check_makedirs,freeze_modules
+                                    is_same_model, fix_bn, sum_list, check_makedirs, freeze_modules
 
 
 cv2.ocl.setUseOpenCL(False)
 cv2.setNumThreads(0)
-os.environ["CUDA_VISIBLE_DEVICES"] = '9'
+# os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 def get_parser():
     parser = argparse.ArgumentParser(description='PyTorch Few-Shot Semantic Segmentation')
-    parser.add_argument('--arch', type=str, default='DCP') # 
+    parser.add_argument('--arch', type=str, default='DCP')
     parser.add_argument('--viz', action='store_true', default=False)
     parser.add_argument('--config', type=str, default='config/pascal/pascal_split0_vgg.yaml', help='config file') # coco/coco_split0_resnet50.yaml
     parser.add_argument('--local_rank', type=int, default=-1, help='number of cpu threads to use during batch generation')    
@@ -245,7 +245,7 @@ def main():
     print('\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  Final Best Result   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
     print(args.arch + '\t Group:{} \t Best_mIoU:{:.4f} \t Best_FBIoU:{:.4f} \t Best_pIoU:{:.4f} \t Best_step:{}'.format(args.split, best_miou, best_FBiou, best_piou, best_epoch))
     print('>'*80)
-    print ('当前的日期和时间是 %s' % datetime.datetime.now())
+    print ('Current Time %s' % datetime.datetime.now())
 
 
 def train(train_loader, val_loader, model, optimizer, epoch ):
