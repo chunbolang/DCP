@@ -390,7 +390,7 @@ class OneModel(nn.Module):
         
         pro_map = torch.cat([pro_BG.unsqueeze(1) , pro_alpha.unsqueeze(1) , \
                 supp_feat.unsqueeze(1) , pro_beta.unsqueeze(1) , pro_delta.unsqueeze(1), pro_gamma.unsqueeze(1)], 1)
-        activation_map = self.query_region_activate(query_feat, pro_map , self.map_mode).unsqueeze(2) #b,5,1,h,w
+        activation_map = self.query_region_activate(query_feat, pro_map , self.map_mode).unsqueeze(2) #b,6,1,h,w
         # 0-BG ,1-alpha, 2-supp_feat, 3-beta, 4-delta , 5_gamma
 
 # self-reasoning scheme
