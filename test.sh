@@ -3,7 +3,7 @@ PARTITION=Segmentation
 
 GPU_ID=0
 dataset=pascal # pascal coco
-exp_name=split3
+exp_name=split0
 
 arch=DCP
 net=vgg # vgg resnet50
