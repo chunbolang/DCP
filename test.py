@@ -98,8 +98,8 @@ def main():
     logger.info("=> creating model ...")
     model, optimizer = get_model(args)
     logger.info(model)
-    val_manual_seed = args.manual_seed # <123> 100 200 300 400 <321>
-    val_num = 5 # 5
+    val_manual_seed = args.manual_seed
+    val_num = 5
     setup_seed(val_manual_seed, False)
     seed_array = np.random.randint(0,1000,val_num)  
 
