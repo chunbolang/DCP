@@ -50,19 +50,19 @@ Performance comparison with the state-of-the-art approaches (i.e., [HSNet](https
 
 1. ##### PASCAL-5<sup>i</sup>
 
-   | Backbone | Method     | 1-shot          | 5-shot          |
-   | -------- | ---------- | --------------- | --------------- |
-   | VGG16    | PFENet     | 58.00           | 59.00           |
-   |          | DCP (ours) | 61.31 ~(+3.31)~ | 65.84 ~(+6.84)~ |
-   | ResNet50 | PFENet     | 60.80           | 61.90           |
-   |          | DCP (ours) | 62.80 ~(+2.00)~ | 67.80 ~(+5.90)~ |
+   | Backbone | Method     | 1-shot                   | 5-shot                   |
+   | -------- | ---------- | ------------------------ | ------------------------ |
+   | VGG16    | PFENet     | 58.00                    | 59.00                    |
+   |          | DCP (ours) | 61.31 <sub>(+3.31)</sub> | 65.84 <sub>(+6.84)</sub> |
+   | ResNet50 | PFENet     | 60.80                    | 61.90                    |
+   |          | DCP (ours) | 62.80 <sub>(+2.00)</sub> | 67.80 <sub>(+5.90)</sub> |
 
 2. ##### COCO-20<sup>i</sup>
 
    | Backbone | Method     | 1-shot          | 5-shot          |
    | -------- | ---------- | --------------- | --------------- |
    | ResNet50 | HSNet      | 39.20           | 46.90           |
-   |          | DCP (ours) | 41.39 ~(+2.19)~ | 46.48 ~(-0.42)~ |
+   |          | DCP (ours) | 41.39 <sub>(+2.19)</sub> | 46.48 <sub>(-0.42)</sub> |
 
 ### References
 
