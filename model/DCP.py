@@ -467,7 +467,6 @@ class OneModel(nn.Module):
             prototypes_temp = prototypes.squeeze(dim=-1)   # [b, n, c, 1]
             map_temp = nn.CosineSimilarity(2)(que_temp, prototypes_temp)  # [n, c, h*w]
             activation_map = map_temp.reshape(b, n, h, w)
-            activation_map = (activation_map+1)/2          # Normalize to (0,1)
             return activation_map
 
         elif mode == 'Learnable':
