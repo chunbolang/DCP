@@ -46,7 +46,7 @@ This repo contains the code for paper "*Beyond the Prototype: Divide-and-conquer
 
 ### Performance
 
-Performance comparison with the state-of-the-art approaches (i.e., [HSNet](https://github.com/juhongm999/hsnet) and [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
+Performance comparison with the state-of-the-art approaches (i.e., [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
 
 1. ##### PASCAL-5<sup>i</sup>
 
@@ -59,14 +59,14 @@ Performance comparison with the state-of-the-art approaches (i.e., [HSNet](https
 
 2. ##### COCO-20<sup>i</sup>
 
-   | Backbone | Method     | 1-shot          | 5-shot          |
-   | -------- | ---------- | --------------- | --------------- |
-   | ResNet50 | HSNet      | 39.20           | 46.90           |
-   |          | DCP (ours) | 41.39 <sub>(+2.19)</sub> | 46.48 <sub>(-0.42)</sub> |
+   | Backbone  | Method     | 1-shot                   | 5-shot                   |
+   | --------- | ---------- | ------------------------ | ------------------------ |
+   | ResNet101 | PFENet     | 38.50                    | 42.70                    |
+   | ResNet50  | DCP (ours) | 41.39 <sub>(+2.89)</sub> | 46.48 <sub>(+3.78)</sub> |
 
 ### References
 
-This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet), [RePRI](https://github.com/mboudiaf/RePRI-for-Few-Shot-Segmentation), and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
+This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet),[SCL] (https://github.com/zbf1991/SCL) and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
 
 ### To-Do List
 
