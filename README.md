@@ -73,7 +73,7 @@ Performance comparison with the state-of-the-art approaches (i.e., [PFENet](http
 
 ### References
 
-This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet), [SCL] (https://github.com/zbf1991/SCL) and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
+This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet),[SCL](https://github.com/zbf1991/SCL)and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
 
 ### To-Do List
 
