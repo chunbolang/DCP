@@ -323,7 +323,7 @@ class Crop(object):
         raw_pos_num = np.sum(raw_label == 1)
         pos_num = np.sum(label == 1)
         crop_cnt = 0
-        while(pos_num < 0.85*raw_pos_num and crop_cnt<=30):  # 随机裁剪的时候尽可能让有效区域大于0.85
+        while(pos_num < 0.85*raw_pos_num and crop_cnt<=30):
             image = raw_image
             label = raw_label
             if self.crop_type == 'rand':
