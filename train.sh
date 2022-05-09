@@ -1,12 +1,10 @@
 #!/bin/sh
 PARTITION=Segmentation
 
-
-# sleep 10h        
-GPU_ID=9
-dataset=pascal # pascal coco fss DAVIS
+GPU_ID=0
+dataset=pascal # pascal coco
 exp_name=split0
-arch=DCP # 
+arch=DCP
 net=resnet50 # vgg resnet50 resnet101
 
 exp_dir=exp/${dataset}/${arch}/${exp_name}/${net} # 
