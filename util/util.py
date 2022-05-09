@@ -54,7 +54,7 @@ def poly_learning_rate(optimizer, base_lr, curr_iter, max_iter, power=0.9, index
     if warmup and curr_iter < warmup_step:
         lr = base_lr * (0.1 + 0.9 * (curr_iter/warmup_step))
     else:
-        lr = base_lr * (1 - float(curr_iter) / max_iter) ** power   # warmup时不连续
+        lr = base_lr * (1 - float(curr_iter) / max_iter) ** power
 
     if curr_iter % 50 == 0:   
         print('Base LR: {:.4f}, Curr LR: {:.4f}, Warmup: {}.'.format(base_lr, lr, (warmup and curr_iter < warmup_step)))     
@@ -63,7 +63,7 @@ def poly_learning_rate(optimizer, base_lr, curr_iter, max_iter, power=0.9, index
         if index <= index_split:
             param_group['lr'] = lr
         else:
-            param_group['lr'] = lr * scale_lr   # 都是10倍学习率
+            param_group['lr'] = lr * scale_lr
 
 
 def intersectionAndUnion(output, target, K, ignore_index=255):
@@ -87,9 +87,9 @@ def intersectionAndUnionGPU(output, target, K, ignore_index=255):
     assert output.shape == target.shape
     output = output.view(-1)
     target = target.view(-1)
-    output[target == ignore_index] = ignore_index      # 将GT中255的部分对应赋值给output
+    output[target == ignore_index] = ignore_index
     intersection = output[output == target]
-    area_intersection = torch.histc(intersection, bins=K, min=0, max=K-1)  # 排除掉255(0~K-1之间) 返回2个类别的元素个数(bins=2)
+    area_intersection = torch.histc(intersection, bins=K, min=0, max=K-1)
     area_output = torch.histc(output, bins=K, min=0, max=K-1)
     area_target = torch.histc(target, bins=K, min=0, max=K-1)
     area_union = area_output + area_target - area_intersection
@@ -105,7 +105,7 @@ def check_makedirs(dir_name):
 
 def del_file(path):
     for i in os.listdir(path):
-        path_file = os.path.join(path,i)  # 取文件绝对路径
+        path_file = os.path.join(path,i)
         if os.path.isfile(path_file):
             os.remove(path_file)
         else:
@@ -207,12 +207,12 @@ def get_metirc(output, target, K, ignore_index=255):
     assert output.shape == target.shape
     output = output.view(-1)
     target = target.view(-1)
-    output[target == ignore_index] = ignore_index      # 将GT中255的部分对应赋值给output
+    output[target == ignore_index] = ignore_index
     intersection = output[output == target]
     if intersection.shape[0] == 0:
         area_intersection = torch.tensor([0.,0.],device='cuda')
     else:
-        area_intersection = torch.histc(intersection, bins=K, min=0, max=K-1)  # 排除掉255(0~K-1之间) 返回2个类别的元素个数(bins=2)
+        area_intersection = torch.histc(intersection, bins=K, min=0, max=K-1)
     area_output = torch.histc(output, bins=K, min=0, max=K-1)
     area_target = torch.histc(target, bins=K, min=0, max=K-1)
     # area_union = area_output + area_target - area_intersection
@@ -320,293 +320,3 @@ def sum_list(list):
     for item in list:
         sum += item
     return sum
-
-
-# ------------------------- Plot -------------------------
-
-# 双变量<蜂巢图>
-def plot_distribution(file_path='size_iou.txt'):
-
-    # plt.style.use(['science']) # science notebook scatter
-    sns.set_theme(style='darkgrid')
-    sns.set_style('ticks')
-    plt.rc('font',family='Times New Roman') 
-
-    list_read = open(file_path).readlines()
-    miou_list, size_list = [], []
-    # for item in list_read[1000*(id-1):1000*id]:
-    for item in list_read[6000:7000]:
-        miou_temp = float(item.split('\t')[-2])
-        size_temp = int(item.split('\t')[-1][:-1])
-        # if miou_temp>0.02:
-        # if (miou_temp>0.0) & (size_temp<120000):
-            # miou_list.append(miou_temp)
-            # size_list.append(size_temp)
-        miou_list.append(miou_temp)
-        size_list.append(size_temp)
-    miou_array = np.array(miou_list) 
-    size_array = np.array(size_list) 
-    data_array = np.concatenate((miou_array.reshape(-1,1),size_array.reshape(-1,1)),1)
-    # sns.set(font_scale=1.5)
-    # sns.palplot(sns.color_palette("Set2", 10))
-
-    df = pd.DataFrame(data_array, columns=['mIoU', 'Object Size'])
-    sns_plot = sns.jointplot(x='Object Size', y='mIoU', data=df, \
-                            kind='hex', color='#4CB391', \
-                            xlim=(-0.3e4,18.3e4), ylim=(-0.03,1.03), \
-                            height=6, ratio=5, space=0.1, \
-                            marginal_kws = dict(bins=25, kde=True), \
-                            joint_kws = dict(gridsize=25)                            
-                            )
-    # #4CB391
-    # 科学计数法
-    def formatnum(x, pos):
-        if x > 1e5:
-            return '$%.1f$x$10^{5}$' % (x/1e5)
-        if x == 1e5:
-            return '$%d$x$10^{5}$' % (x/1e5)            
-        elif x == 0:
-            return '$%d$' % (x)
-        else:
-            return '$%d$x$10^{4}$' % (x/1e4)            
-    formatter = FuncFormatter(formatnum)
-    sns_plot.ax_joint.xaxis.set_major_formatter(formatter)
-
-    # 坐标轴字体
-    sns_plot.ax_joint.set_ylabel('mIoU', family='Times New Roman', \
-                                fontsize=14, fontweight='bold')    
-    sns_plot.ax_joint.set_xlabel('Object Size', family='Times New Roman', \
-                                fontsize=14, fontweight='bold')
-
-    # 刻度字体
-    # labels = sns_plot.ax_joint.get_xticklabels() + sns_plot.ax_joint.get_yticklabels()
-    # [label.set_fontname('Times New Roman') for label in labels]
-    
-    # 标题
-    sns_plot.ax_marg_x.set_title('Baseline', fontsize=18, fontweight='bold', family='Times New Roman', color='k') # Baseline 
-
-    # sns.despine()
-    # sns_plot.savefig('Distribution.png')
-    # sns_plot.savefig('Distribution{}_{}.png'.format(id1,id2), dpi=600)
-    sns_plot.savefig('Distribution2_3.png', dpi=600)
-
-
-    print('done!')
-    color_list_r = [252, 60, 60]
-    color_list_b = [0,0,150]
-    img_tmp = image.copy()
-    for c in range(3):
-        img_tmp[:, :, c] = np.where(label_p[:,:] == 255,
-                                    image[:, :, c] * 0.5 + 0.5 * color_list_r[c],
-                                    img_tmp[:, :, c]*0.9)
-    for c in range(3):
-        img_tmp[:, :, c] = np.where(label_b[:,:] == 255,
-                                    image[:, :, c] * 0.5 + 0.5 * color_list_b[c],
-                                    img_tmp[:, :, c]*0.9)
-    # img_tmp = cv2.cvtColor(img_tmp, cv2.COLOR_RGB2BGR)
-    img_tmp = cv2.resize(img_tmp, dsize=(500, 500), interpolation=cv2.INTER_LINEAR)
-    cv2.imwrite('000.png', img_tmp)    
-
-def plot_seg_result(img, mask, type=None, size=500, alpha=0.5, anns='mask'):
-    assert type in ['pre', 'gt', 'sup']
-    if type == 'pre' or type == 'gt':
-        color = (255, 50, 50)     # red  (255, 50, 50) (255, 90, 90) (252, 60, 60)
-    elif type == 'sup':
-        color = (90, 90, 218)   # blue (102, 140, 255) (90, 90, 218) (90, 154, 218)
-    # elif type == 'gt':
-    #     color = (255, 218, 90)  # yellow
-    color_scribble = (255, 218, 90) # (255, 218, 90) (0, 0, 255)
-
-    img_pre = img.copy()
-
-    if anns == 'mask':
-        for c in range(3):
-            img_pre[:, :, c] = np.where(mask[:,:,0] == 1,
-                                        img[:, :, c] * (1 - alpha) + alpha * color[c],
-                                        img[:, :, c])            
-    elif anns == 'scribble':
-        mask[mask==255]=0
-        mask = mask[:,:,0]
-        dilated_size = 5
-        Scribble_Expert = ScribblesRobot()
-        scribble_mask = Scribble_Expert.generate_scribbles(mask)
-        scribble_mask = ndimage.maximum_filter(scribble_mask, size=dilated_size) # 
-        for c in range(3):
-            img_pre[:, :, c] = np.where(scribble_mask == 1,
-                                        color_scribble[c],
-                                        img[:, :, c])                    
-    elif anns == 'bbox':
-        mask[mask==255]=0
-        mask = mask[:,:,0]        
-        bboxs = find_bbox(mask)
-        for j in bboxs: 
-            cv2.rectangle(img_pre, (j[0], j[1]), (j[0] + j[2], j[1] + j[3]), (255, 0, 0), 4) # -1->fill; 2->draw_rec
-
-    img_pre = cv2.cvtColor(img_pre, cv2.COLOR_RGB2BGR)  
-    
-    if size is not None:
-        img_pre = cv2.resize(img_pre, dsize=(size, size), interpolation=cv2.INTER_LINEAR)
-
-    return img_pre
-    # cv2.imwrite('{}.bmp'.format(type), img_pre)
-
-def plot_seg_result_Nway(img, gt_mask, pre_mask, size=500, alpha=0.5):
-
-    idx_list_gt = list(np.unique(gt_mask))
-    assert len(idx_list_gt) >= 3
-    
-    color_list = [(255, 50, 50), (102, 140, 255)] # red & blue
-    
-    img_gt = img.copy()
-    img_pre = img.copy()
-
-    for idx in idx_list_gt:
-        if idx == 255 or idx == 0:
-            continue
-        for c in range(3):
-            img_gt[:, :, c] = np.where(gt_mask[:,:,0] == idx,
-                                        img[:, :, c] * (1 - alpha) + alpha * color_list[idx_list_gt.index(idx)-1][c],
-                                        img_gt[:, :, c])
-            img_pre[:, :, c] = np.where(pre_mask[:,:,0] == idx,
-                                        img[:, :, c] * (1 - alpha) + alpha * color_list[idx_list_gt.index(idx)-1][c],
-                                        img_pre[:, :, c])
-
-    img_gt = cv2.cvtColor(img_gt, cv2.COLOR_RGB2BGR)
-    img_pre = cv2.cvtColor(img_pre, cv2.COLOR_RGB2BGR)
-    if size is not None:
-        img_gt = cv2.resize(img_gt, dsize=(size, size), interpolation=cv2.INTER_LINEAR)
-        img_pre = cv2.resize(img_pre, dsize=(size, size), interpolation=cv2.INTER_LINEAR)
-
-    return img_gt, img_pre
-
-def plot_act_map(img, act_map, size=500, alpha=0.5): 
-
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR).astype(np.uint8)
-    # act_map = (act_map - act_map.min()) / (act_map.max() - act_map.min())
-    act_map = np.uint8(255*act_map)
-    heatmap = cv2.applyColorMap(act_map, cv2.COLORMAP_JET)  # 将特征图转为伪彩色图
-    zeromap = cv2.applyColorMap(np.zeros_like(act_map), cv2.COLORMAP_JET)
-    onemap = cv2.applyColorMap(np.ones_like(act_map)*255, cv2.COLORMAP_JET)
-    heat_img = cv2.addWeighted(img, 1-alpha, heatmap, alpha, 0)     # 将伪彩色图与原始图片融合
-    zero_img = cv2.addWeighted(img, 1-alpha, zeromap, alpha, 0)
-    one_img = cv2.addWeighted(img, 1-alpha, onemap, alpha, 0)
-    
-    if size is not None:
-        heat_img = cv2.resize(heat_img, dsize=(size, size), interpolation=cv2.INTER_LINEAR)    
-        zero_img = cv2.resize(zero_img, dsize=(size, size), interpolation=cv2.INTER_LINEAR)    
-        one_img = cv2.resize(one_img, dsize=(size, size), interpolation=cv2.INTER_LINEAR)    
-    # cv2.imwrite('555.bmp', heat_img)
-    return heat_img, zero_img, one_img
-
-def plot_cat_wise_result():
-    cat_names = ['aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car' , 'cat', 'chair', 'cow',
-                'diningtable', 'dog', 'horse', 'motorbike', 'person', 'potted plant', 'sheep', 'sofa',
-                'train', 'tv/monitor']
-    idx = ['Baseline', 'Ours']
-    # Ori Data
-    # baseline_list = [0.7893,0.3473,0.7330,0.5328,0.4497,0.8482,0.5905,0.8452,0.2091,0.8547,0.2337,0.8106,0.8079,0.7451,0.5194,0.2688,0.8667,0.3990,0.7119,0.3431]
-    # our_list =      [0.7977,0.3538,0.7237,0.6074,0.5170,0.8591,0.6135,0.8384,0.2772,0.8761,0.2760,0.8104,0.8071,0.7652,0.5175,0.2752,0.8765,0.4247,0.7538,0.3387]
-
-    baseline_list = [0.7893,0.3473,0.7237,0.5328,0.4497,0.8482,0.5905,0.8384,0.2091,0.8547,0.2337,0.8106,0.8071,0.7451,0.5175,0.2688,0.8667,0.3990,0.7119,0.3387]
-    # our_list =      [0.7977,0.3538,0.7330,0.6074,0.5170,0.8591,0.6135,0.8452,0.2772,0.8761,0.2760,0.8104,0.8079,0.7652,0.5194,0.2752,0.8765,0.4247,0.7538,0.3431]
-    margin_list = [0.0144, 0.0385, 0.0163, 0.0546, 0.0673, 0.0159, 0.038, 0.0118, 0.0681, 0.0214, 0.0373, 0.0108, 0.0158, 0.0171, 0.0299, 0.0214, 0.0098, 0.0307, 0.0419, 0.0094]
-    data = np.concatenate((np.array(baseline_list).reshape(1,-1),np.array(margin_list).reshape(1,-1)),axis=0)
-    df = pd.DataFrame(data,index=idx,columns=cat_names)
-
-    x = np.arange(20)
-    # plt.style.use(['science'])
-    plt.rc('font',family='Times New Roman') 
-    fig, ax = plt.subplots()
-    # 取消边框
-    # for key, spine in ax.spines.items():
-    #     # 'left', 'right', 'bottom', 'top'
-    #     if key == 'right' or key == 'top':
-    #         spine.set_visible(False)
-    plt.bar(x, data[0], color='steelblue', edgecolor='k', lw=0.5, tick_label=cat_names, label="Baseline") # #66c2a5
-    plt.bar(x, data[1], bottom=data[0], color='#A4BAD9', edgecolor='k', lw=0.5, label="Ours")           # #8da0cb
-
-    # plt.bar(x, data[1], tick_label=cat_names, color='#A4BAD9')           # Single
-
-    plt.legend(idx, loc=4)
-    plt.xticks(rotation=45)
-    plt.tick_params(labelsize=9)
-    plt.xlim(-1,20)
-    plt.ylim(0.18,0.96)
-    plt.ylabel('mIoU', fontsize=12, fontweight='bold')
-    plt.grid(linestyle='--', linewidth=0.2)
-
-    y_shift = 0 # 0.04
-    # for xx, yy1, yy2 in zip(x,np.array(baseline_list),np.array(our_list)):
-    #     plt.text(xx,yy1-y_shift, '%.4f'%yy1, ha='center', va='bottom', size=5)
-    #     plt.text(xx,yy2, '%.4f'%yy2, ha='center', va='bottom', size=5)
-
-    plt.savefig('Cat_wise.png', bbox_inches='tight', dpi=600) # dpi=600
-    plt.close()
-
-    print('done!')
-
-def plot_loss():
-
-    file_path = 'split0_vggloss.txt'
-    list_read = open(file_path).readlines()
-    iter_list = []
-    epoch_list = []
-    event_list = []
-    loss_list = []
-    epoch_pre = 1
-    num = 0
-    main, aux1, aux2 = 0, 0, 0
-    for id, item in tqdm(enumerate(list_read)):
-        iter = id+1
-        epoch = int(item.split(' ')[0])
-        if epoch == epoch_pre:
-            main += float(item.split(' ')[1])
-            aux1 += float(item.split(' ')[2])
-            aux2 += float(item.split(' ')[3][:-1])    
-            num += 1        
-            continue
-        else:
-            main /= num
-            aux1 /= num
-            aux2 /= num      
-            for i in range(3):
-                iter_list.append(iter)
-                epoch_list.append(epoch_pre)
-                if i == 0:
-                    loss_list.append(main)
-                    event_list.append('main')
-                elif i == 1:
-                    loss_list.append(aux1)
-                    event_list.append('aux1')
-                elif i == 2:
-                    loss_list.append(aux2)
-                    event_list.append('aux2')
-
-            epoch_pre = epoch
-            num, main, axu1, aux2 = 1, 0, 0, 0
-            main += float(item.split(' ')[1])
-            aux1 += float(item.split(' ')[2])
-            aux2 += float(item.split(' ')[3][:-1])
-
-    sns.set_theme(style="darkgrid", font='Palatino Linotype', font_scale=1.2)
-    # sns.set_style({'axes.spines.left': False})
-    pd_data = {'Epochs':epoch_list, 'Loss':loss_list, 'loss':event_list}
-    df = pd.DataFrame(pd_data)
-    plt.figure(figsize=(8, 4))
-    sns_plot = sns.lineplot(x='Epochs',y='Loss', hue='loss', data=df, linewidth=3, legend=None)
-    # plt.legend(labels = ['main','aux1', 'aux2'], loc = 1, bbox_to_anchor = (1,1))
-    plt.xlim(-5,140)
-    fig = sns_plot.get_figure()
-    fig.savefig('loss.png', bbox_inches ='tight', dpi=600)
-    plt.close()
-
-    print('done!')
-
-if __name__ == '__main__':
-    plot_loss()
-    # file_path = 'size_iou.txt'
-    # for id in range(1,9):
-    #     plot_distribution(id, file_path)
-    # plot_distribution(file_path)
-
-    # plot_cat_wise_result()
