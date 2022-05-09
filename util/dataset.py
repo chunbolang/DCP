@@ -46,7 +46,7 @@ def make_dataset(split=0, data_root=None, data_list=None, sub_list=None, filter_
         image_name = os.path.join(data_root, line_split[0])
         label_name = os.path.join(data_root, line_split[1])
         item = (image_name, label_name)
-        label = cv2.imread(label_name, cv2.IMREAD_GRAYSCALE)  # cv2读取进入后就是np格式
+        label = cv2.imread(label_name, cv2.IMREAD_GRAYSCALE)  
         label_class = np.unique(label).tolist()
 
         if 0 in label_class:
@@ -56,17 +56,17 @@ def make_dataset(split=0, data_root=None, data_list=None, sub_list=None, filter_
 
         new_label_class = []     
 
-        if filter_intersection:        # 去除包含novel类的base图像
+        if filter_intersection:        
             if set(label_class).issubset(set(sub_list)):
                 for c in label_class:
                     if c in sub_list:
                         tmp_label = np.zeros_like(label)
-                        target_pix = np.where(label == c)  # 坐标
+                        target_pix = np.where(label == c)  
                         tmp_label[target_pix[0],target_pix[1]] = 1 
                         if tmp_label.sum() >= 2 * 32 * 32:      
                             new_label_class.append(c)     
         else:
-            for c in label_class:      # 确定当前img哪些类满足条件 1.属于train_list 2.大于2*32*32
+            for c in label_class:      
                 if c in sub_list:
                     tmp_label = np.zeros_like(label)
                     target_pix = np.where(label == c)  # 坐标
@@ -77,10 +77,10 @@ def make_dataset(split=0, data_root=None, data_list=None, sub_list=None, filter_
         label_class = new_label_class
 
         if len(label_class) > 0:
-            image_label_list.append(item)   # 参与训练的img列表(不重复)
+            image_label_list.append(item)  
             for c in label_class:
                 if c in sub_list:
-                    sub_class_file_list[c].append(item)  # 按类别存放
+                    sub_class_file_list[c].append(item)  
                     
     print("Checking image&label pair {} list done! ".format(split))
     return image_label_list, sub_class_file_list
@@ -182,7 +182,7 @@ class SemData(Dataset):
 
     def __getitem__(self, index):
         label_class = []
-        image_path, label_path = self.data_list[index]  # 随机img
+        image_path, label_path = self.data_list[index]  
         image = cv2.imread(image_path, cv2.IMREAD_COLOR) 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  
         image = np.float32(image)
@@ -207,13 +207,13 @@ class SemData(Dataset):
         label_class = new_label_class    
         assert len(label_class) > 0
 
-        class_chosen = label_class[random.randint(1,len(label_class))-1]  # 随机选取img的类别
+        class_chosen = label_class[random.randint(1,len(label_class))-1]  
         target_pix = np.where(label == class_chosen)
         ignore_pix = np.where(label == 255)
         label[:,:] = 0
         if target_pix[0].shape[0] > 0:
             label[target_pix[0],target_pix[1]] = 1 
-        label[ignore_pix[0],ignore_pix[1]] = 255       # label中只有0 1 255
+        label[ignore_pix[0],ignore_pix[1]] = 255     
 
 
         file_class_chosen = self.sub_class_file_list[class_chosen]
@@ -222,11 +222,11 @@ class SemData(Dataset):
         support_image_path_list = []
         support_label_path_list = []
         support_idx_list = []
-        for k in range(self.shot):  #support 路径获取
+        for k in range(self.shot):  
             support_idx = random.randint(1,num_file)-1
             support_image_path = image_path
             support_label_path = label_path
-            while((support_image_path == image_path and support_label_path == label_path) or support_idx in support_idx_list):  # 保证与query不同
+            while((support_image_path == image_path and support_label_path == label_path) or support_idx in support_idx_list):  
                 support_idx = random.randint(1,num_file)-1
                 support_image_path, support_label_path = file_class_chosen[support_idx]                
             support_idx_list.append(support_idx)
@@ -234,12 +234,12 @@ class SemData(Dataset):
             support_label_path_list.append(support_label_path)
 
         support_image_list_ori = []
-        support_label_list_ori = []      # 存放mask/scribble/bbox形式标注(根据ann_type)
-        support_label_list_ori_mask = [] # 存放mask形式sup标注
+        support_label_list_ori = []      
+        support_label_list_ori_mask = [] 
 
 
         subcls_list = []
-        for k in range(self.shot):  #support 图像及标签按shot获取
+        for k in range(self.shot):  
             if self.mode == 'train':
                 subcls_list.append(self.sub_list.index(class_chosen))
             else:
@@ -256,7 +256,7 @@ class SemData(Dataset):
             support_label[:,:] = 0
             support_label[target_pix[0],target_pix[1]] = 1 
             
-            support_label, support_label_mask = transform_anns(support_label, self.ann_type)   # Anns形式转换: mask/bbox/scribble
+            support_label, support_label_mask = transform_anns(support_label, self.ann_type)  
             support_label[ignore_pix[0],ignore_pix[1]] = 255
             support_label_mask[ignore_pix[0],ignore_pix[1]] = 255
             if support_image.shape[0] != support_label.shape[0] or support_image.shape[1] != support_label.shape[1]:
@@ -299,7 +299,7 @@ class SemData(Dataset):
             support_image_aug_list = []
             support_label_aug_list = []
             for k in range(self.shot):
-                for a_id in range(num_aug_per_img):       # 每个sup图像扩充次数
+                for a_id in range(num_aug_per_img):      
                     image_aug_temp, label_aug_temp = self.ft_transform(support_image_list_ori[k], support_label_list_ori[k])
                     support_image_aug_list.append(image_aug_temp)
                     support_label_aug_list.append(label_aug_temp)
