@@ -369,16 +369,16 @@ def validate(val_loader, model):
     union_meter = AverageMeter()
     target_meter = AverageMeter()
     if args.data_set == 'pascal':
-        test_num = 1000 # 5000
+        test_num = 1000
         split_gap = 5
     elif args.data_set == 'coco':
-        test_num = 1000 # 20000 
+        test_num = 1000 
         split_gap = 20
     elif args.data_set == 'fss':
         test_num = 1000
         split_gap = 240
     elif args.data_set == 'DAVIS':
-        test_num = 1000 # 20000 
+        test_num = 1000 
         split_gap = 20
     class_intersection_meter = [0]*split_gap
     class_union_meter = [0]*split_gap  
