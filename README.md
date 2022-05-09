@@ -1,9 +1,6 @@
-# DCP
-Official PyTorch Implementation of Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation (IJCAI 2022 Long Oral).
+# Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation
 
-### Paper is available [here](http://arxiv.org/abs/2204.09903). 
-
-This repo contains the code for paper "*Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation*" by Chunbo Lang, Binfei Tu, Gong Cheng and Junwei Han.
+This repo contains the code for our **IJCAI 2022 Long Oral** [paper](http://arxiv.org/abs/2204.09903) "*Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation*" by Chunbo Lang, Binfei Tu, Gong Cheng and Junwei Han.
 
 > **Abstract:**  *Few-shot segmentation, which aims to segment unseen-class objects given only a handful of densely labeled samples, has received widespread attention from the community. Existing approaches typically follow the prototype learning paradigm to perform meta-inference, which fails to fully exploit the underlying information from support image-mask pairs, resulting in various segmentation failures, e.g., incomplete objects, ambiguous boundaries, and distractor activation. To this end, we propose a simple yet versatile framework in the spirit of divide-and-conquer. Specifically, a novel self-reasoning scheme is first implemented on the annotated support image, and then the coarse segmentation mask is divided into multiple regions with different properties. Leveraging effective masked average pooling operations, a series of support-induced proxies are thus derived, each playing a specific role in conquering the above challenges. Moreover, we devise a unique parallel decoder structure that integrates proxies with similar attributes to boost the discrimination power. Our proposed approach, named divide-and-conquer proxies (DCP), allows for the development of appropriate and reliable information as a guide at the "episode" level, not just about the object cues themselves. Extensive experiments on PASCAL-5<sup>i</sup> and COCO-20<sup>i</sup> demonstrate the superiority of DCP over conventional prototype-based approaches (up to 5~10% on average), which also establishes a new state-of-the-art.*
 
@@ -53,7 +50,7 @@ This repo contains the code for paper "*Beyond the Prototype: Divide-and-conquer
 
 ### Performance
 
-Performance comparison with the state-of-the-art approaches (i.e., [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
+Performance comparison with the state-of-the-art approache (i.e., [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
 
 1. ##### PASCAL-5<sup>i</sup>
 
@@ -73,7 +70,7 @@ Performance comparison with the state-of-the-art approaches (i.e., [PFENet](http
 
 ### References
 
-This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet),[SCL](https://github.com/zbf1991/SCL)and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
+This repo is mainly built based on [PFENet](https://github.com/dvlab-research/PFENet), [SCL](https://github.com/zbf1991/SCL) and [SemSeg](https://github.com/hszhao/semseg). Thanks for their great work!
 
 ### To-Do List
 
@@ -88,7 +85,7 @@ If you find our work and this repository useful. Please consider giving a star :
 @InProceedings{lang2022bam,
     title={Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation},
     author={Lang, Chunbo and Tu, Binfei and Cheng, Gong and Han, Junwei},
-    booktitle={IJCAI},
+    booktitle={Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI)},
     year={2022}
 }
 ```
