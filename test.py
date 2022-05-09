@@ -35,7 +35,7 @@ cv2.setNumThreads(0)
 def get_parser():
 
     parser = argparse.ArgumentParser(description='PyTorch Semantic Segmentation')
-    parser.add_argument('--arch', type=str, default='PPP_4') # MyNet_v9_bl_cat PFENet
+    parser.add_argument('--arch', type=str, default='DCP')
     parser.add_argument('--config', type=str, default='config/pascal/pascal_split1_vgg.yaml', help='config file') # pascal/pascal_split0_resnet50.yaml coco/coco_split0_resnet101.yaml
     parser.add_argument('opts', help='see config/ade20k/ade20k_pspnet50.yaml for all options', default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
