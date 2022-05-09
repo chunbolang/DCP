@@ -23,16 +23,16 @@ class CfgNode(dict):
                 init_dict[k] = CfgNode(v, key_list=key_list + [k])
         super(CfgNode, self).__init__(init_dict)
 
-    def __getattr__(self, name):          # 访问键值对
+    def __getattr__(self, name):
         if name in self:
             return self[name]
         else:
             raise AttributeError(name)
 
-    def __setattr__(self, name, value):  # 新增键值对
+    def __setattr__(self, name, value):
         self[name] = value
 
-    def __str__(self):                   # 字符化字典
+    def __str__(self):
         def _indent(s_, num_spaces):
             s = s_.split("\n")
             if len(s) == 1:
