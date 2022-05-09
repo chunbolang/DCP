@@ -426,7 +426,7 @@ class OneModel(nn.Module):
         output_fin = torch.cat([out_BG, out], 1)
         
 
-        #   Oualphaut Part
+        #   Output Part
 
         if self.zoom_factor != 1:
             output_fin = F.interpolate(output_fin, size=(h, w), mode='bilinear', align_corners=True)
