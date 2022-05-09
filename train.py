@@ -192,7 +192,6 @@ def main():
     val_num = 0
 
     start_time = time.time()
-    # scaler = amp.GradScaler()
 
     for epoch in range(args.start_epoch, args.epochs):
         if keep_epoch == args.stop_interval:
