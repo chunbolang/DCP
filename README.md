@@ -50,7 +50,7 @@ This repo contains the code for our **IJCAI 2022 Long Oral** [paper](http://arxi
 
 ### Performance
 
-Performance comparison with the state-of-the-art approache (i.e., [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
+Performance comparison with the state-of-the-art approach (i.e., [PFENet](https://github.com/dvlab-research/PFENet)) in terms of **average** **mIoU** across all folds. 
 
 1. ##### PASCAL-5<sup>i</sup>
 
