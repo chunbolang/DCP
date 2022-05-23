@@ -33,7 +33,6 @@ This repo contains the code for our **IJCAI 2022 Long Oral** [paper](http://arxi
 
 - **Stage1** *Meta-training*
 
-  Train the meta learner. 
 
   ```
   sh train.sh
@@ -41,7 +40,6 @@ This repo contains the code for our **IJCAI 2022 Long Oral** [paper](http://arxi
 
 - **Stage2** *Meta-testing*
 
-  Test the proposed model with MIou and FBIou. 
 
   ```
   sh test.sh
