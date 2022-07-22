@@ -81,9 +81,9 @@ If you find our work and this repository useful. Please consider giving a star :
 
 ```bibtex
 @InProceedings{lang2022dcp,
-    title={Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation},
-    author={Lang, Chunbo and Tu, Binfei and Cheng, Gong and Han, Junwei},
-    booktitle={Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI)},
-    year={2022}
+  title={Beyond the Prototype: Divide-and-conquer Proxies for Few-shot Segmentation},
+  author={Lang, Chunbo and Tu, Binfei and Cheng, Gong and Han, Junwei},
+  booktitle={Proceedings of the International Joint Conference on Artificial Intelligence (IJCAI)},
+  year={2022}
 }
 ```
